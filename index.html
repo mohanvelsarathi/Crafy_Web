@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- ── Meta / SEO ─────────────────────────────────── -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="CRAFY is a creative digital agency crafting powerful digital experiences through UI/UX design, development, and strategic marketing." />
+    <meta name="keywords"
+        content="CRAFY, creative agency, UI UX design, web development, digital marketing, startup agency" />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#0A0A0F" />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://crafyagency.com/" />
+    <meta property="og:title" content="CRAFY — The Art of Premium Digital Craft" />
+    <meta property="og:description"
+        content="Creative digital agency crafting powerful digital experiences through design, development, and strategy." />
+    <meta property="og:image" content="/assets/images/og-cover.png" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CRAFY — The Art of Premium Digital Craft" />
+    <meta name="twitter:description" content="Creative digital agency crafting powerful digital experiences." />
+    <meta name="twitter:image" content="/assets/images/og-cover.png" />
+
+    <title>CRAFY — The Art of Premium Digital Craft</title>
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://crafyagency.com/" />
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "CRAFY",
+    "url": "https://crafyagency.com",
+    "logo": "https://crafyagency.com/assets/images/logo.png",
+    "description": "Creative digital agency specialising in UI/UX design, web development and strategic marketing.",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "IN"
+    },
+    "contactPoint": {
+      "@type": "ContactPoint",
+      "telephone": "+91-98765-43210",
+      "contactType": "customer service"
+    },
+    "sameAs": [
+      "https://twitter.com/crafyagency",
+      "https://instagram.com/crafyagency",
+      "https://linkedin.com/company/crafyagency"
+    ]
+  }
+  </script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Saira+Stencil+One&family=Salsa&display=swap"
+        rel="stylesheet" />
+
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <!-- ── Page frame overlay (unified border + navbar frame) ── -->
+    <div class="page-frame" aria-hidden="true"></div>
+
+
+    <!-- ─────────────────────────────────────────────────
+       NAVBAR
+  ───────────────────────────────────────────────────── -->
+    <header class="navbar" role="banner">
+        <nav class="nav-inner" aria-label="Primary navigation">
+
+            <!-- Left links -->
+            <ul class="nav-links nav-links--left" role="list">
+                <li><a href="#home" class="nav-link active" aria-current="page">Home</a></li>
+                <li><a href="#about" class="nav-link">About</a></li>
+            </ul>
+
+            <!-- Centre logo bump (rises above the bar) -->
+            <a href="#home" class="nav-logo-bump" aria-label="CRAFY — Go to homepage">
+                <svg class="nav-logo-icon" width="18" height="18" viewBox="0 0 24 24" fill="currentColor"
+                    aria-hidden="true">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+                <span class="nav-logo-text">CRAFY</span>
+            </a>
+
+            <!-- Right links -->
+            <ul class="nav-links nav-links--right" role="list">
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
+            </ul>
+
+            <!-- Hamburger (mobile) -->
+            <button class="hamburger" aria-label="Open navigation menu" aria-expanded="false"
+                aria-controls="mobile-menu">
+                <span class="ham-line"></span>
+                <span class="ham-line"></span>
+                <span class="ham-line"></span>
+            </button>
+        </nav>
+
+        <!-- Mobile drawer -->
+        <div class="mobile-menu" id="mobile-menu" role="dialog" aria-label="Mobile navigation" hidden>
+            <ul class="mobile-links" role="list">
+                <li><a href="#home" class="mobile-link">Home</a></li>
+                <li><a href="#about" class="mobile-link">About</a></li>
+                <li><a href="#services" class="mobile-link">Services</a></li>
+                <li><a href="#contact" class="mobile-link">Contact</a></li>
+            </ul>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- ─────────────────────────────────────────────
+         HERO
+    ──────────────────────────────────────────────── -->
+        <section class="hero" id="home" aria-label="Hero section">
+
+            <!-- Aurora background canvas -->
+            <canvas class="aurora-canvas" id="auroraCanvas" aria-hidden="true"></canvas>
+
+            <!-- Grain overlay -->
+            <div class="hero-grain" aria-hidden="true"></div>
+
+            <div class="hero-content">
+                <p class="hero-eyebrow animate-fade-up" aria-label="Tagline">Creative Digital Agency</p>
+
+                <h1 class="hero-title">
+                    <span class="hero-line-1 animate-fade-up delay-1">THE ART OF PREMIUM</span>
+                    <span class="hero-line-2 animate-fade-up delay-2">
+                        DIGITAL <span class="gradient-text">CRAFT.</span>
+                    </span>
+                </h1>
+
+                <p class="hero-sub animate-fade-up delay-3">
+                    We design, build, and scale digital products that define categories.<br />
+                    From bold ideas to flawless execution.
+                </p>
+
+                <div class="hero-ctas animate-fade-up delay-4">
+                    <a href="#contact" class="btn btn-outline" aria-label="Book a discovery call">
+                        BOOK A CALL
+                        <svg class="btn-icon" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                            stroke="currentColor" stroke-width="2" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10" />
+                            <path d="M12 8l4 4-4 4M8 12h8" />
+                        </svg>
+                    </a>
+                    <a href="#services" class="btn btn-solid" aria-label="View our work">VIEW WORK</a>
+                </div>
+            </div>
+
+            <!-- Scroll indicator -->
+            <div class="scroll-indicator animate-fade-up delay-5" aria-hidden="true">
+                <span class="scroll-text">SCROLL DOWN</span>
+                <div class="scroll-line"></div>
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────
+         ABOUT
+    ──────────────────────────────────────────────── -->
+        <section class="about" id="about" aria-labelledby="about-heading">
+            <div class="section-inner about-inner">
+
+                <!-- Left: decorative mark -->
+                <div class="about-icon-wrap js-fade-left" aria-hidden="true">
+                    <div class="about-ring outer"></div>
+                    <div class="about-ring inner"></div>
+                    <div class="about-dot"></div>
+                </div>
+
+                <!-- Right: content -->
+                <div class="about-content js-fade-right">
+                    <p class="section-label">WE ARE CRAFY!</p>
+                    <h2 id="about-heading" class="about-heading">
+                        Crafting Digital Experiences That Drive Growth.
+                    </h2>
+                    <p class="about-body">
+                        CRAFY is a creative startup agency crafting powerful digital experiences through
+                        UI/UX design, development, and strategic marketing. From intuitive interfaces
+                        to scalable digital products, we help startups transform ideas into impactful,
+                        growth-driven solutions.
+                    </p>
+                    <p class="about-body">
+                        We partner with founders and forward-thinking brands who refuse to settle —
+                        pushing boundaries through obsessive craft and measurable impact.
+                    </p>
+                    <a href="#contact" class="btn btn-outline about-cta">LET'S TALK</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────
+         SERVICES
+    ──────────────────────────────────────────────── -->
+        <section class="services" id="services" aria-labelledby="services-heading">
+            <div class="section-inner">
+
+                <div class="services-header js-fade-up">
+                    <p class="section-label">OUR SERVICES</p>
+                    <h2 id="services-heading" class="services-heading">What We Do Best</h2>
+                </div>
+
+                <ul class="services-list" role="list">
+
+                    <li class="service-item js-stagger" data-index="0">
+                        <div class="service-item-inner">
+                            <div class="service-left">
+                                <span class="service-num">01</span>
+                                <div>
+                                    <h3 class="service-title">DESIGN SERVICES</h3>
+                                    <p class="service-desc">UI/UX design, brand identity, motion design &amp; design
+                                        systems.</p>
+                                </div>
+                            </div>
+                            <div class="service-arrow" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8">
+                                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                                </svg>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="service-item js-stagger" data-index="1">
+                        <div class="service-item-inner">
+                            <div class="service-left">
+                                <span class="service-num">02</span>
+                                <div>
+                                    <h3 class="service-title">DEVELOPMENT SERVICES</h3>
+                                    <p class="service-desc">Web apps, mobile apps, API integration &amp; scalable
+                                        architecture.</p>
+                                </div>
+                            </div>
+                            <div class="service-arrow" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8">
+                                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                                </svg>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="service-item js-stagger" data-index="2">
+                        <div class="service-item-inner">
+                            <div class="service-left">
+                                <span class="service-num">03</span>
+                                <div>
+                                    <h3 class="service-title">MARKETING SERVICES</h3>
+                                    <p class="service-desc">Growth strategy, SEO, paid media &amp; content marketing.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="service-arrow" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8">
+                                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                                </svg>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="service-item js-stagger" data-index="3">
+                        <div class="service-item-inner">
+                            <div class="service-left">
+                                <span class="service-num">04</span>
+                                <div>
+                                    <h3 class="service-title">STRATEGY &amp; CONSULTING</h3>
+                                    <p class="service-desc">Product roadmaps, go-to-market plans &amp; competitive
+                                        positioning.</p>
+                                </div>
+                            </div>
+                            <div class="service-arrow" aria-hidden="true">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.8">
+                                    <path d="M7 17L17 7M17 7H7M17 7v10" />
+                                </svg>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
+            </div>
+        </section>
+
+        <!-- ─────────────────────────────────────────────
+         CONTACT
+    ──────────────────────────────────────────────── -->
+        <section class="contact" id="contact" aria-labelledby="contact-heading">
+            <div class="section-inner contact-inner">
+
+                <!-- Left column -->
+                <div class="contact-left js-fade-left">
+                    <p class="section-label">CONTACT</p>
+                    <h2 id="contact-heading" class="contact-headline">
+                        Built To Stand Out.<br />
+                        Designed <span class="gradient-text">To Lead.</span>
+                    </h2>
+
+                    <p class="contact-tagline">
+                        Have a project in mind? Let's create something extraordinary together.
+                    </p>
+
+                    <!-- Phone card -->
+                    <div class="phone-card" role="group" aria-label="Phone contact">
+                        <p class="phone-label">Phone No:</p>
+                        <a href="tel:+919876543210" class="phone-num" aria-label="Call us at +91 98765 43210">
+                            +91 98765 43210
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right column: form -->
+                <div class="contact-right js-fade-right">
+                    <h3 class="form-heading">Get in Touch</h3>
+                    <p class="form-subhead">Fill out the form below and we'll get back to you as soon as possible.</p>
+
+                    <form class="contact-form" id="contactForm" novalidate aria-label="Contact form">
+
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">Full Name</label>
+                            <input type="text" id="fullName" name="fullName" class="form-input" placeholder="Full Name"
+                                autocomplete="name" required aria-required="true" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-input" placeholder="Email Address"
+                                autocomplete="email" required aria-required="true" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-input" placeholder="Phone Number"
+                                autocomplete="tel" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="projectType" class="form-label">Project Type</label>
+                            <input type="text" id="projectType" name="projectType" class="form-input"
+                                placeholder="Project Type" />
+                        </div>
+
+                        <div class="form-group">
+                            <label for="message" class="form-label">Your Message</label>
+                            <textarea id="message" name="message" class="form-input form-textarea"
+                                placeholder="Your Message..." rows="4" required aria-required="true"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-solid btn-full">SUBMIT</button>
+                    </form>
+                </div>
+
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ─────────────────────────────────────────────────
+       FOOTER
+  ───────────────────────────────────────────────────── -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-inner">
+
+            <!-- Col 1: Brand -->
+            <div class="footer-col footer-brand">
+                <a href="#home" class="logo footer-logo" aria-label="CRAFY — Back to top">
+                    <span class="logo-ring" aria-hidden="true"></span>
+                    CRAFY
+                </a>
+                <p class="footer-brand-desc">
+                    Crafting digital experiences that define brands and accelerate growth.
+                </p>
+            </div>
+
+            <!-- Col 2: Quick Links -->
+            <div class="footer-col">
+                <h4 class="footer-heading">QUICK LINKS</h4>
+                <ul class="footer-links" role="list">
+                    <li><a href="#home" class="footer-link">→ Home</a></li>
+                    <li><a href="#about" class="footer-link">→ About</a></li>
+                    <li><a href="#services" class="footer-link">→ Services</a></li>
+                    <li><a href="#contact" class="footer-link">→ Contact</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 3: Services -->
+            <div class="footer-col">
+                <h4 class="footer-heading">OUR SERVICES</h4>
+                <ul class="footer-links" role="list">
+                    <li><a href="#services" class="footer-link">→ Designing</a></li>
+                    <li><a href="#services" class="footer-link">→ Developing</a></li>
+                    <li><a href="#services" class="footer-link">→ Marketing</a></li>
+                    <li><a href="#services" class="footer-link">→ Strategy</a></li>
+                </ul>
+            </div>
+
+            <!-- Col 4: Social -->
+            <div class="footer-col">
+                <h4 class="footer-heading">FOLLOW US</h4>
+                <div class="social-icons" role="list" aria-label="Social media links">
+
+                    <a href="https://twitter.com" class="social-icon" target="_blank" rel="noopener noreferrer"
+                        role="listitem" aria-label="Follow CRAFY on Twitter">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 01-1.93.07 4.28 4.28 0 004 2.98 8.521 8.521 0 01-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z" />
+                        </svg>
+                    </a>
+
+                    <a href="https://instagram.com" class="social-icon" target="_blank" rel="noopener noreferrer"
+                        role="listitem" aria-label="Follow CRAFY on Instagram">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" aria-hidden="true">
+                            <rect x="2" y="2" width="20" height="20" rx="5" ry="5" />
+                            <circle cx="12" cy="12" r="4" />
+                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                        </svg>
+                    </a>
+
+                    <a href="https://facebook.com" class="social-icon" target="_blank" rel="noopener noreferrer"
+                        role="listitem" aria-label="Follow CRAFY on Facebook">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path d="M18 2h-3a5 5 0 00-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 011-1h3z" />
+                        </svg>
+                    </a>
+
+                    <a href="mailto:hello@crafyagency.com" class="social-icon" role="listitem" aria-label="Email CRAFY">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" aria-hidden="true">
+                            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                            <polyline points="22,6 12,13 2,6" />
+                        </svg>
+                    </a>
+
+                    <a href="https://linkedin.com" class="social-icon" target="_blank" rel="noopener noreferrer"
+                        role="listitem" aria-label="Follow CRAFY on LinkedIn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                            <path
+                                d="M16 8a6 6 0 016 6v7h-4v-7a2 2 0 00-2-2 2 2 0 00-2 2v7h-4v-7a6 6 0 016-6zM2 9h4v12H2z" />
+                            <circle cx="4" cy="4" r="2" />
+                        </svg>
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <p class="footer-copy">&copy; CRAFY 2026. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- JS -->
+    <script src="main.js"></script>
+</body>
+
+</html>
