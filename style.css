@@ -1,12 +1,26 @@
-/* ════════════════════════════════════════════════════════
-   CRAFY — Complete Stylesheet
-   Order: tokens → reset → base → navbar → hero → about
-          → services → contact → footer → animations
-          → responsive
-   ════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════════
+   CRAFY — style.css
+   Sections:
+     1.  Custom Properties (Design Tokens)
+     2.  Reset
+     3.  Base
+     4.  Utility
+     5.  Buttons
+     6.  Navbar
+     7.  Hero
+     8.  About
+     9.  Services
+     10. Contact
+     11. Footer
+     12. Scroll Animations
+     13. Responsive
+     14. Page Frame
+     15. Reduced Motion
+════════════════════════════════════════════════════════════ */
 
-/* ── 1. DESIGN TOKENS ──────────────────────────────────── */
+/* ── 1. CUSTOM PROPERTIES ───────────────────────────────── */
 :root {
+  /* Colours */
   --bg-primary: #0A0A0F;
   --bg-secondary: #12121A;
   --purple-primary: #8B5CF6;
@@ -34,7 +48,7 @@
   --t-slow: 0.65s;
 }
 
-/* ── 2. RESET ───────────────────────────────────────────── */
+/* ── 2. RESET ────────────────────────────────────────────── */
 *,
 *::before,
 *::after {
@@ -72,7 +86,7 @@ button {
   font: inherit;
 }
 
-/* ── 3. BASE ────────────────────────────────────────────── */
+/* ── 3. BASE ─────────────────────────────────────────────── */
 body {
   font-family: var(--font-secondary);
   background-color: var(--bg-primary);
@@ -91,7 +105,9 @@ h6 {
   line-height: 1.15;
 }
 
-/* Gradient text utility */
+/* ── 4. UTILITY ──────────────────────────────────────────── */
+
+/* Gradient text */
 .gradient-text {
   background: linear-gradient(90deg, var(--purple-gradient-start), var(--purple-gradient-end));
   -webkit-background-clip: text;
@@ -99,25 +115,25 @@ h6 {
   -webkit-text-fill-color: transparent;
 }
 
-/* Section label */
+/* Section eyebrow label */
 .section-label {
+  display: block;
   font-family: var(--font-primary);
   font-size: 14px;
   letter-spacing: 3px;
   text-transform: uppercase;
   color: var(--purple-primary);
   margin-bottom: 16px;
-  display: block;
 }
 
-/* Section inner container */
+/* Centred content container */
 .section-inner {
   max-width: var(--container);
   margin: 0 auto;
   padding: 0 var(--gutter);
 }
 
-/* ── 4. BUTTONS ─────────────────────────────────────────── */
+/* ── 5. BUTTONS ──────────────────────────────────────────── */
 .btn {
   font-family: var(--font-secondary);
   display: inline-flex;
@@ -129,7 +145,8 @@ h6 {
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  transition: transform var(--t-fast) var(--ease-out),
+  transition:
+    transform var(--t-fast) var(--ease-out),
     box-shadow var(--t-fast) var(--ease-out),
     background var(--t-fast),
     border-color var(--t-fast);
@@ -175,43 +192,50 @@ h6 {
   flex-shrink: 0;
 }
 
-/* ── 5. NAVBAR — full-width header inside the page frame ─── */
+/* ── 6. NAVBAR ───────────────────────────────────────────── */
+
+/*
+ * Fixed rounded-rect bar inside the page-frame.
+ * left/right/top match the frame's 12px inset.
+ */
 .navbar {
   position: fixed;
   top: 12px;
-  /* flush with page-frame's 12px top border    */
   left: 12px;
-  /* flush with page-frame's 12px left border   */
   right: 12px;
-  /* flush with page-frame's 12px right border  */
   z-index: 1000;
-  background: rgba(11, 11, 18, 0.92);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-radius: 0;
-  /* frame handles the rounded corners         */
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+  border-radius: 14px;
+  border: 1px solid transparent;
   overflow: visible;
-  /* allow logo bump to protrude through frame */
-  transition: background var(--t-med);
+  transition:
+    background var(--t-med),
+    border-color var(--t-med),
+    box-shadow var(--t-med);
 }
 
 .navbar.scrolled {
-  background: rgba(11, 11, 18, 0.98);
+  background: rgba(13, 13, 20, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow: 0 4px 32px rgba(0, 0, 0, 0.40);
 }
 
 .nav-inner {
+  position: relative;
   width: 100%;
-  height: 62px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 36px;
-  position: relative;
-  /* anchor for the absolute logo bump */
+  padding: 0 48px;
+  /* generous side padding for balanced look */
 }
 
-/* Nav link groups */
+/* Link groups */
 .nav-links {
   display: flex;
   align-items: center;
@@ -223,22 +247,32 @@ h6 {
   font-family: var(--font-primary);
   font-size: 13px;
   letter-spacing: 1px;
-  padding: 6px 16px;
+  padding: 6px 20px;
   border-radius: 999px;
-  color: rgba(255, 255, 255, 0.52);
+  color: rgba(255, 255, 255, 0.55);
   border: 1.5px solid transparent;
-  transition: color var(--t-fast), border-color var(--t-fast), background var(--t-fast);
+  transition:
+    color var(--t-fast) var(--ease-out),
+    background var(--t-fast) var(--ease-out),
+    transform var(--t-fast) var(--ease-out),
+    box-shadow var(--t-fast) var(--ease-out);
 }
 
+/* Hover — white pill with brand-purple text */
 .nav-link:hover {
-  color: var(--text-primary);
+  color: #7f34e3;
+  background: #ffffff;
+  border-color: transparent;
+  transform: scale(1.04);
+  box-shadow: 0 2px 12px rgba(127, 52, 227, 0.18);
 }
 
-/* Active = purple-bordered oval (matches reference image) */
+/* Active — same pill style, always visible */
 .nav-link.active {
-  color: var(--purple-primary);
-  border-color: var(--purple-primary);
-  background: rgba(139, 92, 246, 0.07);
+  color: #7f34e3;
+  background: #ffffff;
+  border-color: transparent;
+  box-shadow: 0 2px 12px rgba(127, 52, 227, 0.18);
 }
 
 .nav-link:focus-visible {
@@ -246,35 +280,28 @@ h6 {
   outline-offset: 2px;
 }
 
-/* ── Centre logo bump ───────────────────────────────────────
-   top: -12px  =  protrudes exactly as thick as the page-frame
-   border (12px), so the dome arches through the top border.   */
+/*
+ * Centre logo bump:
+ * The white SVG trapezoid IS the visible shape.
+ * Container is transparent — no background needed.
+ */
 .nav-logo-bump {
   position: absolute;
   left: 50%;
+  top: -1px;
   transform: translateX(-50%);
-  top: -12px;
-  /* = page-frame border thickness */
-  height: calc(100% + 12px);
-  /* reaches outer frame edge       */
-  min-width: 158px;
+  height: calc(100% + 1px);
+  min-width: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
-  padding: 0 26px;
-  background: #ECECF3;
-  border-radius: 14px 14px 0 0;
-  /* rounded arch top, flat base   */
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
-  border-bottom: none;
+  gap: 8px;
+  padding: 0 28px;
+  background: transparent;
+  border: none;
   text-decoration: none;
   z-index: 2;
-  transition: background var(--t-fast);
-}
-
-.nav-logo-bump:hover {
-  background: #F3F3F9;
+  overflow: hidden;
 }
 
 .nav-logo-bump:focus-visible {
@@ -282,25 +309,41 @@ h6 {
   outline-offset: 3px;
 }
 
-/* Crescent moon icon */
-.nav-logo-icon {
-  color: #7C3AED;
-  flex-shrink: 0;
-  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.5));
+/* Trapezoid SVG — the white background shape of the bump */
+.nav-logo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 1;
+  /* full white visible shape */
+  z-index: 0;
 }
 
-/* CRAFY gradient text */
+/* Crescent moon icon — layered above the white shape */
+.nav-logo-icon {
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  color: #7C3AED;
+  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.4));
+}
+
+/* CRAFY wordmark — purple gradient, readable on white bump */
 .nav-logo-text {
+  position: relative;
+  z-index: 1;
   font-family: var(--font-primary);
   font-size: 18px;
   letter-spacing: 2px;
-  background: linear-gradient(110deg, var(--purple-gradient-start), var(--purple-gradient-end));
+  background: linear-gradient(110deg, #1a0533 30%, var(--purple-gradient-start), var(--purple-gradient-end));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-/* ── Hamburger ──────────────────────────────────────────────*/
+/* Hamburger (hidden on desktop) */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -335,7 +378,7 @@ h6 {
   transform: translateY(-7px) rotate(-45deg);
 }
 
-/* ── Mobile menu ────────────────────────────────────────────*/
+/* Mobile drawer */
 .mobile-menu {
   background: var(--bg-secondary);
   border-top: 1px solid var(--input-border);
@@ -352,14 +395,16 @@ h6 {
 }
 
 .mobile-link {
-  font-family: var(--font-primary);
   display: block;
-  padding: 14px 0;
+  font-family: var(--font-primary);
   font-size: 15px;
   letter-spacing: 1px;
+  padding: 14px 0;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--input-border);
-  transition: color var(--t-fast), padding-left var(--t-fast);
+  transition:
+    color var(--t-fast),
+    padding-left var(--t-fast);
 }
 
 .mobile-link:hover {
@@ -367,8 +412,7 @@ h6 {
   padding-left: 8px;
 }
 
-
-/* ── 6. HERO ────────────────────────────────────────────── */
+/* ── 7. HERO ─────────────────────────────────────────────── */
 .hero {
   position: relative;
   min-height: 100vh;
@@ -379,12 +423,10 @@ h6 {
   text-align: center;
   overflow: hidden;
   padding: 120px var(--gutter) 80px;
-  background: var(--bg-primary);
-  cursor: pointer
-    /* hide pointer in wave zone */
+  background-color: var(--bg-primary);
+  cursor: pointer;
 }
 
-/* Aurora canvas */
 .aurora-canvas {
   position: absolute;
   inset: 0;
@@ -394,7 +436,6 @@ h6 {
   z-index: 0;
 }
 
-/* Grain overlay */
 .hero-grain {
   position: absolute;
   inset: 0;
@@ -405,7 +446,6 @@ h6 {
   background-size: 256px 256px;
 }
 
-/* Hero content */
 .hero-content {
   position: relative;
   z-index: 2;
@@ -457,7 +497,6 @@ h6 {
   flex-wrap: wrap;
 }
 
-/* Scroll indicator */
 .scroll-indicator {
   position: absolute;
   bottom: 36px;
@@ -498,7 +537,7 @@ h6 {
   }
 }
 
-/* ── 7. ABOUT ───────────────────────────────────────────── */
+/* ── 8. ABOUT ────────────────────────────────────────────── */
 .about {
   padding: var(--section-pad);
   background: var(--bg-secondary);
@@ -511,7 +550,6 @@ h6 {
   align-items: center;
 }
 
-/* Decorative icon */
 .about-icon-wrap {
   position: relative;
   width: 100%;
@@ -559,10 +597,9 @@ h6 {
   }
 }
 
-/* About text */
 .about-heading {
-  font-size: clamp(26px, 3vw, 40px);
   font-family: var(--font-primary);
+  font-size: clamp(26px, 3vw, 40px);
   color: var(--text-primary);
   margin-bottom: 20px;
   line-height: 1.2;
@@ -579,7 +616,7 @@ h6 {
   margin-top: 8px;
 }
 
-/* ── 8. SERVICES ────────────────────────────────────────── */
+/* ── 9. SERVICES ─────────────────────────────────────────── */
 .services {
   padding: var(--section-pad);
   background: var(--bg-primary);
@@ -624,12 +661,12 @@ h6 {
 }
 
 .service-num {
+  flex-shrink: 0;
   font-family: var(--font-secondary);
   font-size: 13px;
   letter-spacing: 2px;
   color: var(--purple-primary);
   padding-top: 4px;
-  flex-shrink: 0;
 }
 
 .service-title {
@@ -661,7 +698,8 @@ h6 {
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
-  transition: transform var(--t-med) var(--ease-out),
+  transition:
+    transform var(--t-med) var(--ease-out),
     border-color var(--t-fast),
     color var(--t-fast),
     box-shadow var(--t-fast);
@@ -674,7 +712,7 @@ h6 {
   box-shadow: 0 0 14px rgba(139, 92, 246, 0.35);
 }
 
-/* ── 9. CONTACT ─────────────────────────────────────────── */
+/* ── 10. CONTACT ─────────────────────────────────────────── */
 .contact {
   padding: var(--section-pad);
   background: var(--bg-secondary);
@@ -687,7 +725,6 @@ h6 {
   align-items: flex-start;
 }
 
-/* Left */
 .contact-headline {
   font-size: clamp(28px, 3.2vw, 44px);
   color: var(--text-primary);
@@ -702,7 +739,6 @@ h6 {
   margin-bottom: 40px;
 }
 
-/* Phone card */
 .phone-card {
   display: inline-flex;
   flex-direction: column;
@@ -732,7 +768,6 @@ h6 {
   color: var(--purple-primary);
 }
 
-/* Right: form */
 .form-heading {
   font-family: var(--font-primary);
   font-size: 28px;
@@ -794,12 +829,11 @@ h6 {
   min-height: 120px;
 }
 
-/* Form submit button spacing */
 .contact-form .btn-solid {
   margin-top: 4px;
 }
 
-/* ── 10. FOOTER ─────────────────────────────────────────── */
+/* ── 11. FOOTER ──────────────────────────────────────────── */
 .footer {
   background: var(--bg-primary);
   border-top: 1px solid var(--input-border);
@@ -809,14 +843,12 @@ h6 {
 .footer-inner {
   max-width: var(--container);
   margin: 0 auto;
-  padding: 0 var(--gutter);
+  padding: 0 var(--gutter) 60px;
   display: grid;
   grid-template-columns: 1.6fr 1fr 1fr 1fr;
   gap: 50px;
-  padding-bottom: 60px;
 }
 
-/* Brand col */
 .footer-logo {
   margin-bottom: 18px;
 }
@@ -828,7 +860,6 @@ h6 {
   max-width: 280px;
 }
 
-/* Footer headings */
 .footer-heading {
   font-family: var(--font-primary);
   font-size: 13px;
@@ -837,7 +868,6 @@ h6 {
   margin-bottom: 20px;
 }
 
-/* Footer links */
 .footer-links {
   display: flex;
   flex-direction: column;
@@ -856,7 +886,6 @@ h6 {
   padding-left: 4px;
 }
 
-/* Social icons */
 .social-icons {
   display: flex;
   flex-wrap: wrap;
@@ -872,7 +901,8 @@ h6 {
   align-items: center;
   justify-content: center;
   color: var(--text-muted);
-  transition: color var(--t-fast),
+  transition:
+    color var(--t-fast),
     border-color var(--t-fast),
     transform var(--t-fast),
     box-shadow var(--t-fast);
@@ -890,7 +920,6 @@ h6 {
   outline-offset: 3px;
 }
 
-/* Footer bottom bar */
 .footer-bottom {
   border-top: 1px solid var(--input-border);
   text-align: center;
@@ -903,9 +932,9 @@ h6 {
   letter-spacing: 0.5px;
 }
 
-/* ── 11. SCROLL ANIMATIONS ──────────────────────────────── */
+/* ── 12. SCROLL ANIMATIONS ───────────────────────────────── */
 
-/* Initial states */
+/* Hero entry: animate-fade-up */
 .animate-fade-up {
   opacity: 0;
   transform: translateY(32px);
@@ -915,7 +944,6 @@ h6 {
   animation: fadeUp var(--t-slow) var(--ease-out) forwards;
 }
 
-/* Delay utilities */
 .delay-1 {
   animation-delay: 0.10s;
 }
@@ -943,29 +971,37 @@ h6 {
   }
 }
 
-/* Scroll-triggered classes */
+/* IntersectionObserver classes */
 .js-fade-left {
   opacity: 0;
   transform: translateX(-48px);
-  transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out);
+  transition:
+    opacity var(--t-slow) var(--ease-out),
+    transform var(--t-slow) var(--ease-out);
 }
 
 .js-fade-right {
   opacity: 0;
   transform: translateX(48px);
-  transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out);
+  transition:
+    opacity var(--t-slow) var(--ease-out),
+    transform var(--t-slow) var(--ease-out);
 }
 
 .js-fade-up {
   opacity: 0;
   transform: translateY(40px);
-  transition: opacity var(--t-slow) var(--ease-out), transform var(--t-slow) var(--ease-out);
+  transition:
+    opacity var(--t-slow) var(--ease-out),
+    transform var(--t-slow) var(--ease-out);
 }
 
 .js-stagger {
   opacity: 0;
   transform: translateY(30px);
-  transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+  transition:
+    opacity 0.5s var(--ease-out),
+    transform 0.5s var(--ease-out);
 }
 
 .js-fade-left.is-visible,
@@ -976,14 +1012,12 @@ h6 {
   transform: none;
 }
 
-/* ── 12. RESPONSIVE ─────────────────────────────────────── */
+/* ── 13. RESPONSIVE ──────────────────────────────────────── */
 
 /* Tablet */
 @media (max-width: 1199px) {
-  .about-inner {
-    gap: 48px;
-  }
 
+  .about-inner,
   .contact-inner {
     gap: 48px;
   }
@@ -996,12 +1030,11 @@ h6 {
 
 /* Mobile */
 @media (max-width: 767px) {
-
   :root {
     --section-pad: 72px 0;
   }
 
-  /* Navbar — collapse to hamburger */
+  /* Navbar: collapse to hamburger */
   .nav-links,
   .nav-logo-bump {
     display: none;
@@ -1011,7 +1044,6 @@ h6 {
     display: flex;
   }
 
-  /* Navbar sits inside the 6px mobile frame */
   .navbar {
     top: 6px;
     left: 6px;
@@ -1090,52 +1122,49 @@ h6 {
   }
 }
 
-/* ── 13. PAGE FRAME ─────────────────────────────────────────
-   Single overlay that creates the unified rounded-rectangle
-   border frame.  inset box-shadow draws 12px white borders on
-   all four sides.  z-index 999 = above content, below navbar
-   (1000), so the navbar + logo bump renders on top.           */
+/* ── 14. PAGE FRAME ──────────────────────────────────────── */
 
+/*
+ * Single fixed overlay that creates the unified rounded-rectangle
+ * border frame using inset box-shadow (12px on all sides).
+ * z-index 999 = above content, below navbar (1000).
+ */
 .page-frame {
   position: fixed;
   inset: 0;
-  /* 12px white border on all sides, rounded corners */
-  box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.90);
   border-radius: 24px;
   pointer-events: none;
   z-index: 999;
+  box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.90);
 }
 
-/* Soft inner glow on the frame border */
 .page-frame::after {
   content: '';
   position: absolute;
   inset: 0;
   border-radius: 24px;
+  pointer-events: none;
   box-shadow:
     inset 0 0 0 12px rgba(255, 255, 255, 0.90),
-    /* solid frame */
     inset 0 0 28px 12px rgba(255, 255, 255, 0.08);
-  /* inner glow */
-  pointer-events: none;
 }
 
 /* Smaller frame on mobile */
 @media (max-width: 767px) {
   .page-frame {
-    box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.88);
     border-radius: 16px;
+    box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.88);
   }
 
   .page-frame::after {
+    border-radius: 16px;
     box-shadow:
       inset 0 0 0 6px rgba(255, 255, 255, 0.88),
       inset 0 0 16px 6px rgba(255, 255, 255, 0.07);
-    border-radius: 16px;
   }
 }
 
-/* ── 14. REDUCED MOTION ─────────────────────────────────── */
+/* ── 15. REDUCED MOTION ──────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
 
   *,
