@@ -24,8 +24,8 @@
   --bg-primary: #0a0a0f;
   --bg-secondary: #12121a;
   --purple-primary: #8b5cf6;
-  --purple-gradient-start: #a855f7;
-  --purple-gradient-end: #ec4899;
+  --purple-gradient-start: #7F34E3;
+  --purple-gradient-end: #BC8AFF;
   --text-primary: #ffffff;
   --text-secondary: #e5e5e5;
   --text-muted: #9ca3af;
@@ -108,7 +108,11 @@ h6 {
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(90deg, var(--purple-gradient-start), var(--purple-gradient-end));
+  background: linear-gradient(
+    90deg,
+    var(--purple-gradient-start),
+    var(--purple-gradient-end)
+  );
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -171,7 +175,11 @@ h6 {
 }
 
 .btn-solid {
-  background: linear-gradient(135deg, var(--purple-gradient-start), var(--purple-gradient-end));
+  background: linear-gradient(
+    135deg,
+    var(--purple-gradient-start),
+    var(--purple-gradient-end)
+  );
   color: var(--text-primary);
   border: none;
   box-shadow: 0 4px 24px rgba(139, 92, 246, 0.45);
@@ -245,7 +253,7 @@ h6 {
 .nav-inner {
   position: relative;
   width: 100%;
-  height: 56px;
+  height: 58px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -257,40 +265,28 @@ h6 {
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 200px;
+  gap: 32px;
   list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .nav-link {
-  font-family: var(--font-primary);
-  font-size: 13px;
+  font-family: var(--font-secondary);
+  font-size: 14px;
   letter-spacing: 1px;
-  padding: 6px 18px;
-  border-radius: 999px;
-  color: rgba(255, 255, 255, 0.55);
-  border: 1.5px solid transparent;
+  padding: 6px 16px;
+  border-radius: 8px;
+  color: rgba(255, 255, 255, 0.7);
   transition:
     color var(--t-fast) var(--ease-out),
-    background var(--t-fast) var(--ease-out),
-    transform var(--t-fast) var(--ease-out),
-    box-shadow var(--t-fast) var(--ease-out);
+    background var(--t-fast) var(--ease-out);
 }
 
-/* Hover — white pill with brand-purple text */
-.nav-link:hover {
-  color: #7f34e3;
-  background: #ffffff;
-  border-color: transparent;
-  transform: scale(1.04);
-  box-shadow: 0 2px 12px rgba(127, 52, 227, 0.18);
-}
-
-/* Active — same pill style, always visible */
+.nav-link:hover,
 .nav-link.active {
-  color: #7f34e3;
-  background: #ffffff;
-  border-color: transparent;
-  box-shadow: 0 2px 12px rgba(127, 52, 227, 0.18);
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-link:focus-visible {
@@ -298,71 +294,76 @@ h6 {
   outline-offset: 2px;
 }
 
-/*
- * Centre logo bump:
- * The white SVG trapezoid IS the visible shape.
- * Container is transparent — no background needed.
+/* 
+ * Left Logo 
  */
-.nav-logo-bump {
-  position: absolute;
-  left: 50%;
-  top: 0px;
-  transform: translateX(-50%);
-  height: calc(100% + 1px);
-  min-width: 260px;
+.nav-brand {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 46px;
-  background: transparent;
-  border: none;
+  gap: 10px;
   text-decoration: none;
-  z-index: 2;
-  overflow: hidden;
+  color: #ffffff;
 }
 
-.nav-logo-bump:focus-visible {
+.nav-brand:focus-visible {
   outline: 2px solid var(--purple-primary);
   outline-offset: 3px;
 }
 
-/* Trapezoid SVG — the white background shape of the bump */
-.nav-logo {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 1;
-  z-index: 0;
+.nav-logo-img {
+  height: clamp(36px, 4vw, 52px); /* Size optimization for responsiveness */
+  width: auto;
+  display: block;
+  object-fit: contain;
+  transition: transform var(--t-fast) var(--ease-out), filter var(--t-fast) var(--ease-out);
+  will-change: transform, filter;
 }
 
-/* Crescent moon icon — layered above the white shape */
+.nav-brand:hover .nav-logo-img {
+  transform: scale(1.06);
+  filter: drop-shadow(0 4px 16px rgba(139, 92, 246, 0.4));
+}
+
 .nav-logo-icon {
-  position: relative;
-  z-index: 1;
   flex-shrink: 0;
   color: #7c3aed;
-  filter: drop-shadow(0 0 4px rgba(139, 92, 246, 0.4));
+  filter: drop-shadow(0 0 6px rgba(139, 92, 246, 0.6));
 }
 
-/* CRAFY wordmark — purple gradient, readable on white bump */
 .nav-logo-text {
-  position: relative;
-  z-index: 1;
   font-family: var(--font-primary);
-  font-size: 18px;
+  font-size: 20px;
   letter-spacing: 2px;
-  background: linear-gradient(
-    110deg,
-    #1a0533 30%,
-    var(--purple-gradient-start),
-    var(--purple-gradient-end)
-  );
+  background: linear-gradient(110deg, #ffffff 30%, #e0e0e0);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+/*
+ * Right Actions
+ */
+.nav-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-connect-btn {
+  font-family: var(--font-primary);
+  font-size: 13px;
+  letter-spacing: 1px;
+  padding: 8px 24px;
+  border-radius: 999px;
+  background: transparent;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all var(--t-fast) var(--ease-out);
+}
+
+.nav-connect-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
 }
 
 /* Hamburger (hidden on desktop) */
@@ -439,7 +440,8 @@ h6 {
 /* ── 7. HERO ─────────────────────────────────────────────── */
 .hero {
   position: relative;
-  min-height: 100vh;
+  height: 100svh;
+  width: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -461,15 +463,17 @@ h6 {
   display: block;
 }
 
+
 .hero-grain {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  z-index: 2; /* Ensure grain stays on top */
   pointer-events: none;
   opacity: 0.035;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   background-size: 256px 256px;
 }
+
 
 .hero-content {
   position: relative;
@@ -506,12 +510,16 @@ h6 {
   color: var(--text-primary);
 }
 
-.hero-sub {
-  font-size: 17px;
-  color: var(--text-muted);
-  max-width: 560px;
-  margin: 0 auto 40px;
-  line-height: 1.8;
+.hero-subtitle {
+  font-family: inter;
+  font-size: clamp(14px, 1.1vw, 20px);
+  color: var(--text-secondary);
+  max-width: 650px;
+  margin: 16px auto 40px;
+  line-height: 1.6;
+  letter-spacing: 0.7px;
+  font-weight: 350;
+  text-transform: none;
 }
 
 .hero-ctas {
@@ -532,7 +540,29 @@ h6 {
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  animation: scrollBounce 2.5s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+  cursor: pointer;
+  text-decoration: none;
+  animation: 
+    popInBounce 1.2s var(--ease-out) 1.5s both,
+    scrollBounce 2.5s ease-in-out 2.7s infinite;
+}
+
+@keyframes popInBounce {
+  0% { 
+    opacity: 0; 
+    transform: scale(0.5) translateY(40px); 
+  }
+  60% { 
+    opacity: 1; 
+    transform: scale(1.1) translateY(-10px); 
+  }
+  80% { 
+    transform: scale(0.95) translateY(5px); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  }
 }
 
 @keyframes scrollBounce {
@@ -541,7 +571,7 @@ h6 {
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-6px);
+    transform: translateY(-8px);
   }
 }
 
@@ -575,11 +605,14 @@ h6 {
 
 /* ── 8. ABOUT ────────────────────────────────────────────── */
 .about {
-  padding: var(--section-pad);
+  padding: calc(56px + 40px) var(--gutter) 40px;
   background: var(--bg-secondary);
-  min-height: 100vh;
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 
 .about-inner {
@@ -615,8 +648,19 @@ h6 {
 
 /* ── 9. SERVICES ─────────────────────────────────────────── */
 .services {
-  padding: var(--section-pad);
+  padding: calc(56px + 40px) var(--gutter) 40px;
   background: var(--bg-primary);
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.services .section-inner {
+  max-width: none; /* Removes artificial constraint, reducing left/right empty space */
+  width: 100%;
 }
 
 .services-header {
@@ -711,14 +755,26 @@ h6 {
 
 /* ── 10. CONTACT ─────────────────────────────────────────── */
 .contact {
-  padding: var(--section-pad);
+  padding: calc(56px + 40px) var(--gutter) 40px;
   background: var(--bg-secondary);
+  height: 100svh;
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Remove max width restriction specifically for contact section to use more space */
+.contact .section-inner {
+  max-width: 1400px; /* Increased from the default 1200px to reduce side space */
+  width: 100%;
 }
 
 .contact-inner {
   display: grid;
-  grid-template-columns: 40% 1fr;
-  gap: 80px;
+  grid-template-columns: 45% 1fr;
+  gap: clamp(40px, 8vw, 120px);
   align-items: center;
 }
 
@@ -727,7 +783,11 @@ h6 {
   align-items: center;
   justify-content: center;
   padding: 8px 24px;
-  background: linear-gradient(135deg, var(--purple-gradient-start), var(--purple-gradient-end));
+  background: linear-gradient(
+    135deg,
+    var(--purple-gradient-start),
+    var(--purple-gradient-end)
+  );
   color: var(--text-primary);
   border-radius: 999px;
   font-family: var(--font-primary);
@@ -750,10 +810,52 @@ h6 {
 }
 
 .form-card {
-  background: rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   padding: 40px;
   border-radius: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform var(--t-med) var(--ease-out),
+    box-shadow var(--t-med) var(--ease-out),
+    border-color var(--t-med),
+    background var(--t-med);
+}
+
+.form-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 150%;
+  height: 100%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.01) 30%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.01) 70%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  transition: left 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.form-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(139, 92, 246, 0.2);
+  border-color: rgba(139, 92, 246, 0.3);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.form-card:hover::before {
+  left: 150%;
 }
 
 .contact-form {
@@ -771,11 +873,13 @@ h6 {
   font-family: var(--font-secondary);
   font-size: 14px;
   color: var(--text-primary);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 12px;
   padding: 18px 20px;
   width: 100%;
+  position: relative;
+  z-index: 2;
   outline: none;
   transition:
     border-color var(--t-fast),
@@ -789,8 +893,10 @@ h6 {
 
 .form-input:focus {
   border-color: var(--purple-primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
-  background: rgba(255, 255, 255, 0.07);
+  box-shadow:
+    0 0 0 3px rgba(139, 92, 246, 0.15),
+    inset 0 0 8px rgba(139, 92, 246, 0.05);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .form-textarea {
@@ -1096,64 +1202,6 @@ h6 {
   }
 }
 
-/* ── 14. PAGE FRAME ──────────────────────────────────────── */
-
-/*
- * Single fixed overlay that creates the unified rounded-rectangle
- * border frame using inset box-shadow (12px on all sides).
- * z-index 999 = above content, below navbar (1000).
- */
-.page-frame {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: -24px;
-  border-radius: 24px 24px 0 0;
-  pointer-events: none;
-  z-index: 999;
-  box-shadow: inset 0 0 0 12px rgba(255, 255, 255, 0.9);
-  transition:
-    bottom 0.4s var(--ease-out),
-    border-radius 0.4s var(--ease-out);
-}
-
-.page-frame.show-bottom {
-  bottom: 0;
-  border-radius: 24px;
-}
-
-.page-frame::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  box-shadow:
-    inset 0 0 0 12px rgba(255, 255, 255, 0.9),
-    inset 0 0 28px 12px rgba(255, 255, 255, 0.08);
-}
-
-/* Smaller frame on mobile */
-@media (max-width: 767px) {
-  .page-frame {
-    bottom: -16px;
-    border-radius: 16px 16px 0 0;
-    box-shadow: inset 0 0 0 6px rgba(255, 255, 255, 0.88);
-  }
-
-  .page-frame.show-bottom {
-    bottom: 0;
-    border-radius: 16px;
-  }
-
-  .page-frame::after {
-    box-shadow:
-      inset 0 0 0 6px rgba(255, 255, 255, 0.88),
-      inset 0 0 16px 6px rgba(255, 255, 255, 0.07);
-  }
-}
-
 /* ── 15. REDUCED MOTION ──────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *,
@@ -1166,5 +1214,172 @@ h6 {
 
   .scroll-line {
     animation: none;
+  }
+}
+
+/* ── 16. SHORT VIEWPORT FALLBACK ─────────────────────────── */
+@media (max-height: 700px) {
+  .about, .services, .contact {
+    height: auto;
+    min-height: 100svh;
+    overflow: visible;
+    padding-top: 120px;
+    padding-bottom: 80px;
+  }
+}
+
+/* ── 18. UNIQUE BUTTON (HERO) ───────────────────────────── */
+.btn-glass.btn-unique {
+  padding: 8px 8px 8px 32px;
+  color: #1a1a1a;
+  background: #ffffff;
+  border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  position: relative;
+  overflow: hidden;
+  /* Prevent interaction delays */
+  backface-visibility: hidden;
+  transform: translateZ(0);
+}
+
+/* Base text */
+.btn-unique .btn-text {
+  font-weight: 800;
+  transition: color var(--t-fast) var(--ease-out);
+  position: relative;
+  z-index: 2;
+}
+
+/* Square Icon Box */
+.btn-unique .btn-icon-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #8938F4;
+  border-radius: 10px;
+  color: #ffffff;
+  transition: all var(--t-fast) var(--ease-out);
+  box-shadow: 0 4px 12px rgba(137, 56, 244, 0.25);
+  position: relative;
+  z-index: 2;
+}
+
+/* Background Slide Overlay (Right to Left) */
+.btn-glass.btn-unique::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1;
+  background: #8938F4;
+  border-left: 1.5px solid #ffffff;
+  border-right: 1.5px solid #ffffff;
+   border-top: 1.5px solid #ffffff;
+  border-bottom: 1.5px solid #ffffff;
+  border-radius: 999px;
+  /* Start completely off-screen to the right */
+  transform: translateX(125%);
+  transition: transform 1s ease-in-out; /* Optimised Speed (20) */
+}
+
+/* Hover State - Triggers the slide */
+.btn-glass.btn-unique:hover::before,
+.btn-glass.btn-unique:focus-visible::before {
+  /* Slide fully into view covering the button */
+  transform: translateX(0);
+}
+
+.btn-glass.btn-unique:hover,
+.btn-glass.btn-unique:focus-visible {
+  box-shadow: 0 12px 40px rgba(137, 56, 244, 0.45);
+  border-color: #8938F4;
+  background: #ffffff; /* keep white base mostly hidden by overlay */
+}
+
+.btn-unique:hover .btn-text,
+.btn-unique:focus-visible .btn-text {
+  color: #ffffff;
+}
+
+.btn-unique:hover .btn-icon-box,
+.btn-unique:focus-visible .btn-icon-box {
+  background: transparent;
+  box-shadow: none;
+  transform: translateX(4px);
+}
+
+/* ── 17. BACK TO TOP BUTTON ──────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 999;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 1px solid rgba(139, 92, 246, 0.4);
+  background: rgba(10, 10, 15, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--purple-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(20px) scale(0.8);
+  transition:
+    opacity var(--t-med) var(--ease-out),
+    visibility var(--t-med),
+    transform var(--t-med) var(--ease-out),
+    background var(--t-fast),
+    border-color var(--t-fast),
+    box-shadow var(--t-fast);
+  box-shadow:
+    0 0 16px rgba(139, 92, 246, 0.15),
+    0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  animation: bttPulse 2.5s ease-in-out infinite;
+}
+
+.back-to-top:hover {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: var(--purple-primary);
+  box-shadow:
+    0 0 28px rgba(139, 92, 246, 0.45),
+    0 8px 24px rgba(0, 0, 0, 0.3);
+  transform: translateY(-3px) scale(1.08);
+  animation: none;
+}
+
+.back-to-top:active {
+  transform: translateY(0) scale(0.95);
+}
+
+.back-to-top:focus-visible {
+  outline: 2px solid var(--purple-primary);
+  outline-offset: 3px;
+}
+
+@keyframes bttPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 16px rgba(139, 92, 246, 0.15),
+      0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow:
+      0 0 24px rgba(139, 92, 246, 0.35),
+      0 4px 16px rgba(0, 0, 0, 0.3);
   }
 }

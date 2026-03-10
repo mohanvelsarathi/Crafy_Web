@@ -19,7 +19,7 @@ let lenis;
 (function initLenis() {
   if (typeof Lenis !== "undefined") {
     lenis = new Lenis({
-      lerp: 0.08,
+      lerp: 0.05,
       smoothWheel: true,
       syncTouch: true, // Smooth scrolling effect on mobile/touch
     });
@@ -40,8 +40,8 @@ let lenis;
         if (target) {
           e.preventDefault();
           lenis.scrollTo(target, {
-            offset: -80, // Offset for navbar
-            duration: 1.2,
+            offset: 0, 
+            duration: 1.5,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
           });
         }
@@ -52,212 +52,238 @@ let lenis;
 
 /* ═══════════════════════════════════════════════════════════
    1. HERO WAVE ANIMATION
-   Three-layer left-to-right flowing sine wave with canvas glow.
-
-   Architecture:
-     • Each WAVE layer has its own amplitude, frequency, phase
-       speed, stroke width, and alpha — drawn back-to-front.
-     • shadowBlur + shadowColor create the purple glow halo.
-     • A horizontal gradient (left → mid → right) is re-created
-       each frame to match the exact purple palette colours.
-     • Phase offset advances every frame → seamless loop L→R.
-     • IntersectionObserver pauses RAF when hero is off-screen.
+   Liquid Aurora wave via WebGL Shader.
+   Direction is customizable via waveConfig below.
 ════════════════════════════════════════════════════════════ */
 (function initWave() {
   const canvas = document.getElementById("waveCanvas");
   if (!canvas) return;
 
-  const ctx = canvas.getContext("2d");
-  let W, H, raf;
-  let phase = 0;
-  let visible = true;
+  // --- CONFIGURATION ---
+  // Change these to adjust the wave flow direction.
+  // [1.0, 0.0]  = flow right
+  // [-1.0, 0.0] = flow left
+  // [1.0, 1.0]  = flow diagonally down-right
+  const waveConfig = {
+    direction: [0.5, 0.2, 0.1], // Custom movement direction
+    speed: 0.001           // Animation speed modifier
+  };
 
-  /* Interactive state */
-  let mx = -1000,
-    my = -1000;
-  let pmx = -1000,
-    pmy = -1000;
-  let splashForce = 0;
-  let splashX = 0;
-  const particles = [];
-
-  /* ── Resize ────────────────────────────────────────────── */
-  function resize() {
-    W = canvas.width = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
+  const gl = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+  if (!gl) {
+    console.warn("WebGL not supported, falling back to empty canvas");
+    return;
   }
-  resize();
-  window.addEventListener("resize", resize, { passive: true });
 
-  /* Mouse tracking */
-  canvas.addEventListener("mousemove", (e) => {
-    const rect = canvas.getBoundingClientRect();
-    mx = e.clientX - rect.left;
-    my = e.clientY - rect.top;
-  });
-  canvas.addEventListener("mouseleave", () => {
-    mx = -1000;
-    my = -1000;
-  });
+  const vsSource = `
+    attribute vec2 a_position;
+    void main() {
+      gl_Position = vec4(a_position, 0.0, 1.0);
+    }
+  `;
 
-  /* ── Wave layer configs (back → front) ─────────────────── */
-  const LAYERS = [
-    { ampRatio: 0.13, freq: 1.5, speed: 0.4, phaseOff: 0.0, lineW: 90, blur: 80, alpha: 0.18 },
-    { ampRatio: 0.11, freq: 1.5, speed: 0.55, phaseOff: 0.5, lineW: 40, blur: 30, alpha: 0.45 },
-    { ampRatio: 0.1, freq: 1.5, speed: 0.7, phaseOff: 1.0, lineW: 8, blur: 10, alpha: 0.85 },
+  // Premium liquid aurora wave shader
+  const fsSource = `
+    precision highp float;
+    uniform vec2 u_resolution;
+    uniform float u_time;
+    uniform vec2 u_dir;
+
+    // Simplex 3D Noise by Ian McEwan, Ashima Arts
+    vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x, 289.0);}
+    vec4 taylorInvSqrt(vec4 r){return 1.79284291400159 - 0.85373472095314 * r;}
+    float snoise(vec3 v){ 
+      const vec2  C = vec2(1.0/6.0, 1.0/3.0);
+      const vec4  D = vec4(0.0, 0.5, 1.0, 2.0);
+      vec3 i  = floor(v + dot(v, C.yyy));
+      vec3 x0 = v - i + dot(i, C.xxx);
+      vec3 g = step(x0.yzx, x0.xyz);
+      vec3 l = 1.0 - g;
+      vec3 i1 = min(g.xyz, l.zxy);
+      vec3 i2 = max(g.xyz, l.zxy);
+      vec3 x1 = x0 - i1 + 1.0 * C.xxx;
+      vec3 x2 = x0 - i2 + 2.0 * C.xxx;
+      vec3 x3 = x0 - 1.0 + 3.0 * C.xxx;
+      i = mod(i, 289.0); 
+      vec4 p = permute(permute(permute(
+                 i.z + vec4(0.0, i1.z, i2.z, 1.0))
+               + i.y + vec4(0.0, i1.y, i2.y, 1.0)) 
+               + i.x + vec4(0.0, i1.x, i2.x, 1.0));
+      float n_ = 1.0/7.0;
+      vec3  ns = n_ * D.wyz - D.xzx;
+      vec4 j = p - 49.0 * floor(p * ns.z *ns.z);
+      vec4 x_ = floor(j * ns.z);
+      vec4 y_ = floor(j - 7.0 * x_ );
+      vec4 x = x_ *ns.x + ns.yyyy;
+      vec4 y = y_ *ns.x + ns.yyyy;
+      vec4 h = 1.0 - abs(x) - abs(y);
+      vec4 b0 = vec4(x.xy, y.xy);
+      vec4 b1 = vec4(x.zw, y.zw);
+      vec4 s0 = floor(b0)*2.0 + 1.0;
+      vec4 s1 = floor(b1)*2.0 + 1.0;
+      vec4 sh = -step(h, vec4(0.0));
+      vec4 a0 = b0.xzyw + s0.xzyw*sh.xxyy;
+      vec4 a1 = b1.xzyw + s1.xzyw*sh.zzww;
+      vec3 p0 = vec3(a0.xy,h.x);
+      vec3 p1 = vec3(a0.zw,h.y);
+      vec3 p2 = vec3(a1.xy,h.z);
+      vec3 p3 = vec3(a1.zw,h.w);
+      vec4 norm = taylorInvSqrt(vec4(dot(p0,p0), dot(p1,p1), dot(p2, p2), dot(p3,p3)));
+      p0 *= norm.x; p1 *= norm.y; p2 *= norm.z; p3 *= norm.w;
+      vec4 m = max(0.6 - vec4(dot(x0,x0), dot(x1,x1), dot(x2,x2), dot(x3,x3)), 0.0);
+      m = m * m;
+      return 42.0 * dot(m*m, vec4(dot(p0,x0), dot(p1,x1), dot(p2,x2), dot(p3,x3)));
+    }
+
+    void main() {
+      // Normalize coords and adjust for aspect ratio
+      vec2 st = gl_FragCoord.xy / u_resolution.xy;
+      st.x *= u_resolution.x / u_resolution.y;
+
+      // Custom direction flow
+      vec2 movement = u_dir * u_time * 0.15;
+      
+      // Layered noise coordinate spaces
+      vec3 pos1 = vec3(st * 1.5 - movement, u_time * 0.1);
+      vec3 pos2 = vec3(st * 2.0 + movement * 0.5, u_time * 0.15);
+      vec3 pos3 = vec3(st * 1.0 - movement * 0.8, u_time * 0.05);
+
+      // Distortions
+      float n1 = snoise(pos1);
+      float n2 = snoise(pos2 + vec3(n1 * 0.5));
+      float n3 = snoise(pos3 + vec3(n2 * 0.5));
+      
+      // Ocean wave base shape
+      float wave = sin((st.y * 3.0) + n1 * 2.0 - n2 + u_time * 0.2);
+      wave = smoothstep(-1.0, 1.0, wave);
+      
+      // Liquid Aurora Color Palette (Matte Finish)
+      vec3 bgCol = vec3(0.0, 0.0, 0.0);          // #000000 - Primary Background
+      vec3 waveCol1 = vec3(0.537, 0.22, 0.957);  // #8938F4 - Primary Animation Color
+      vec3 waveCol2 = vec3(0.0, 0.0, 0.0);       // #000000 - Secondary Animation Color
+      vec3 waveCol3 = vec3(0.537, 0.22, 0.957);  // #7c3bd1ff - Accent Color
+
+      vec3 color = bgCol;
+      
+      // Morph colors based on wave/noise overlaps
+      float flow1 = smoothstep(0.1, 0.9, wave + n2 * 0.5);
+      float flow2 = smoothstep(0.2, 0.8, n3 * wave);
+      float flow3 = smoothstep(0.4, 1.0, n1 * n3 + wave * 0.5);
+      
+      color = mix(color, waveCol1, flow1 * 0.8);
+      color = mix(color, waveCol2, flow2 * 0.7);
+      color += waveCol3 * flow3 * 0.6;
+      
+      // Removed specular highlights for a matte finish
+      // Subtle edge darkening
+      float edge = smoothstep(0.0, 0.3, gl_FragCoord.y / u_resolution.y);
+      color *= (0.7 + 0.3 * edge);
+
+      // Dark mask for the top-left (navigation logo area) to maintain a pure black background
+      float distX = gl_FragCoord.x / u_resolution.x;
+      float distY = 1.0 - (gl_FragCoord.y / u_resolution.y);
+      float logoMask = smoothstep(0.0, 0.4, length(vec2(distX, distY * 1.5)));
+      color *= logoMask;
+
+      gl_FragColor = vec4(color, 1.0);
+    }
+  `;
+
+  function createShader(gl, type, source) {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, source);
+    gl.compileShader(shader);
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+      console.error(gl.getShaderInfoLog(shader));
+      gl.deleteShader(shader);
+      return null;
+    }
+    return shader;
+  }
+
+  const vertexShader = createShader(gl, gl.VERTEX_SHADER, vsSource);
+  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fsSource);
+
+  const program = gl.createProgram();
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
+  gl.linkProgram(program);
+
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+    console.error("Unable to initialize the shader program.");
+    return;
+  }
+
+  const positionAttributeLocation = gl.getAttribLocation(program, "a_position");
+  const positionBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+  
+  // Create a full-screen quad
+  const positions = [
+    -1.0, -1.0,
+     1.0, -1.0,
+    -1.0,  1.0,
+    -1.0,  1.0,
+     1.0, -1.0,
+     1.0,  1.0,
   ];
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
 
-  /* Purple gradient colours */
-  const C_LEFT = "#9E56FF";
-  const C_MID = "#7F34E3";
-  const C_RIGHT = "#BC8AFF";
+  const resolutionUniformLocation = gl.getUniformLocation(program, "u_resolution");
+  const timeUniformLocation = gl.getUniformLocation(program, "u_time");
+  const dirUniformLocation = gl.getUniformLocation(program, "u_dir");
 
-  function spawnParticles(x, y) {
-    if (particles.length > 60) return; // cap
-    const count = 4 + Math.random() * 6;
-    for (let i = 0; i < count; i++) {
-      const angle = Math.random() * Math.PI * 2;
-      const speed = 1 + Math.random() * 4;
-      particles.push({
-        x: x,
-        y: y,
-        vx: Math.cos(angle) * speed,
-        vy: Math.sin(angle) * speed - 2,
-        life: 1.0,
-        decay: 0.015 + Math.random() * 0.02,
-        size: 2 + Math.random() * 3,
-      });
-    }
+  let animationFrameId;
+  let startTime = null;
+  let lastTime = 0;
+  let dt = 0;
+
+  function resizeCanvas() {
+    // Sharp resolution handling
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = canvas.offsetWidth * dpr;
+    canvas.height = canvas.offsetHeight * dpr;
+    gl.viewport(0, 0, canvas.width, canvas.height);
   }
 
-  /* ── Draw one layer ────────────────────────────────────── */
-  function drawLayer(layer, t) {
-    const amp = H * layer.ampRatio;
-    const centY = H * 0.5;
-    const freq = layer.freq;
-    const step = 4;
+  window.addEventListener("resize", resizeCanvas, { passive: true });
+  resizeCanvas();
 
-    const grad = ctx.createLinearGradient(0, 0, W, 0);
-    grad.addColorStop(0, C_LEFT);
-    grad.addColorStop(0.5, C_MID);
-    grad.addColorStop(1, C_RIGHT);
+  function render(time) {
+    if (!startTime) startTime = time;
+    const elapsed = (time - startTime) * waveConfig.speed;
 
-    ctx.save();
-    ctx.lineWidth = layer.lineW;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.strokeStyle = grad;
-    ctx.shadowColor = C_MID;
-    ctx.shadowBlur = layer.blur;
-    ctx.globalAlpha = layer.alpha;
+    gl.useProgram(program);
 
-    ctx.beginPath();
-    for (let x = 0; x <= W + step; x += step) {
-      const angle = (x / W) * freq * Math.PI * 2 - t * layer.speed + layer.phaseOff;
+    gl.enableVertexAttribArray(positionAttributeLocation);
+    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+    gl.vertexAttribPointer(positionAttributeLocation, 2, gl.FLOAT, false, 0, 0);
 
-      /* Ripple perturbation calculation */
-      let perturb = 0;
-      if (splashForce > 0) {
-        const d = Math.abs(x - splashX);
-        const inf = Math.exp(-(d * d) / 6000);
-        perturb = inf * Math.sin(d * 0.03 - t * 12) * splashForce;
-      }
+    gl.uniform2f(resolutionUniformLocation, canvas.width, canvas.height);
+    gl.uniform1f(timeUniformLocation, elapsed);
+    gl.uniform2f(dirUniformLocation, waveConfig.direction[0], waveConfig.direction[1]);
 
-      const y = centY + Math.sin(angle) * amp + perturb;
-      x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
-    }
-    ctx.stroke();
-    ctx.restore();
+    gl.drawArrays(gl.TRIANGLES, 0, 6);
+    animationFrameId = requestAnimationFrame(render);
   }
-
-  function drawParticles() {
-    if (!particles.length) return;
-    ctx.save();
-    ctx.shadowColor = C_LEFT;
-    ctx.shadowBlur = 12;
-
-    for (let i = particles.length - 1; i >= 0; i--) {
-      let p = particles[i];
-      p.x += p.vx;
-      p.y += p.vy;
-      p.vy += 0.05; // gravity
-      p.life -= p.decay;
-
-      if (p.life <= 0) {
-        particles.splice(i, 1);
-        continue;
-      }
-
-      ctx.globalAlpha = p.life * 0.8;
-      ctx.fillStyle = Math.random() > 0.5 ? "#FFFFFF" : C_MID;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.restore();
-  }
-
-  /* ── Main render loop ──────────────────────────────────── */
-  let last = null;
-
-  function render(now) {
-    if (!visible) {
-      raf = requestAnimationFrame(render);
-      return;
-    }
-
-    if (last === null) last = now;
-    const dt = Math.min((now - last) / 1000, 0.05);
-    last = now;
-
-    phase += dt;
-
-    /* Check wave intersection */
-    if (mx > 0 && pmx > 0) {
-      const edge = LAYERS[2];
-      const waveY =
-        H * 0.5 +
-        Math.sin((mx / W) * edge.freq * Math.PI * 2 - phase * edge.speed + edge.phaseOff) *
-          (H * edge.ampRatio);
-      const pWaveY =
-        H * 0.5 +
-        Math.sin((pmx / W) * edge.freq * Math.PI * 2 - phase * edge.speed + edge.phaseOff) *
-          (H * edge.ampRatio);
-
-      const dist = my - waveY;
-      const pDist = pmy - pWaveY;
-
-      // if crossed over the line
-      if (dist * pDist <= 0 || (Math.abs(dist) < 25 && Math.abs(my - pmy) > 3)) {
-        spawnParticles(mx, waveY);
-        splashForce = Math.min(splashForce + 15, 40); // add to splash energy
-        splashX = mx;
-      }
-    }
-
-    pmx = mx;
-    pmy = my; // update previous cursor
-    splashForce *= 0.94; // dampen splash
-
-    ctx.clearRect(0, 0, W, H);
-
-    LAYERS.forEach((layer) => drawLayer(layer, phase));
-    drawParticles();
-
-    raf = requestAnimationFrame(render);
-  }
-
-  raf = requestAnimationFrame(render);
-
-  /* ── Pause off-screen for performance ──────────────────── */
+  
+  // Pause/Play based on intersection observer to save performance
   const heroEl = canvas.closest(".hero") || canvas.parentElement;
   if ("IntersectionObserver" in window) {
-    new IntersectionObserver(
-      (entries) => {
-        visible = entries[0].isIntersecting;
-      },
-      { threshold: 0 },
-    ).observe(heroEl);
+    let visible = true;
+    new IntersectionObserver(entries => {
+      visible = entries[0].isIntersecting;
+      if (visible) {
+        if (!animationFrameId) render(performance.now());
+      } else {
+        if (animationFrameId) {
+          cancelAnimationFrame(animationFrameId);
+          animationFrameId = null;
+        }
+      }
+    }, { threshold: 0 }).observe(heroEl);
+  } else {
+    render(performance.now());
   }
 })();
 
@@ -452,21 +478,29 @@ let lenis;
 })();
 
 /* ═══════════════════════════════════════════════════════════
-   7. PAGE FRAME SCROLL
-   Show bottom border only when reaching the footer.
+   7. BACK TO TOP BUTTON
 ════════════════════════════════════════════════════════════ */
-(function initPageFrame() {
-  const frame = document.querySelector(".page-frame");
-  const footer = document.querySelector(".footer");
-  if (!frame || !footer) return;
+(function initBackToTop() {
+  const btn = document.getElementById("backToTop");
+  if (!btn) return;
 
-  function onScroll() {
-    const scrolled = window.scrollY + window.innerHeight;
-    const limit = document.documentElement.scrollHeight - 20;
-    frame.classList.toggle("show-bottom", scrolled >= limit);
+  /* Show/hide based on scroll position */
+  function toggleVisibility() {
+    btn.classList.toggle("visible", window.scrollY > window.innerHeight * 0.6);
   }
 
-  window.addEventListener("scroll", onScroll, { passive: true });
-  window.addEventListener("resize", onScroll, { passive: true });
-  onScroll();
+  window.addEventListener("scroll", toggleVisibility, { passive: true });
+  toggleVisibility();
+
+  /* Scroll to top on click — uses Lenis if available, else native */
+  btn.addEventListener("click", () => {
+    if (typeof lenis !== "undefined" && lenis) {
+      lenis.scrollTo(0, {
+        duration: 0.8,
+        easing: (t) => 1 - Math.pow(1 - t, 4), // quartic ease-out — fast & snappy
+      });
+    } else {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  });
 })();
