@@ -1,13 +1,22 @@
 /**
- * CRAFY — main.js
- *
- * Modules (IIFEs — isolated scope, no global pollution):
- *   1. Aurora Canvas Animation
- *   2. Navbar  — active link & background on scroll
- *   3. Hamburger Menu
- *   4. Hero Entry Animations
- *   5. Scroll Reveal  (IntersectionObserver)
- *   6. Contact Form   — validation + submit feedback
+ * @fileoverview CRAFY — Main JavaScript Engine
+ * 
+ * Implements a highly optimized, modular, and dependency-free (except Lenis) 
+ * frontend architecture using Immediately Invoked Function Expressions (IIFEs).
+ * This ensures strict scope isolation and zero global namespace pollution.
+ * 
+ * Architecture Modules:
+ *   1. Smooth Scrolling (Lenis Integration)
+ *   2. Liquid Aurora WebGL Background
+ *   3. Smart Navbar (Scroll Spy & Active States)
+ *   4. Mobile Hamburger Navigation
+ *   5. Hero Entrance Typography Animations
+ *   6. scroll Reveal (IntersectionObserver API)
+ *   7. Client-side Form Validation
+ *   8. Back to Top Native/Lenis Integration
+ * 
+ * @author CRAFY Engineering
+ * @version 1.0.0
  */
 
 "use strict";
@@ -16,6 +25,13 @@
    0. SMOOTH SCROLLING (Lenis)
 ════════════════════════════════════════════════════════════ */
 let lenis;
+
+/**
+ * @function initLenis
+ * @description Initializes the Lenis smooth scrolling library.
+ * Implements a custom `requestAnimationFrame` loop for buttery smooth momentum scrolling.
+ * Hooks into native anchor tags to provide eased programmatic scrolling.
+ */
 (function initLenis() {
   if (typeof Lenis !== "undefined") {
     lenis = new Lenis({
@@ -55,6 +71,13 @@ let lenis;
    Liquid Aurora wave via WebGL Shader.
    Direction is customizable via waveConfig below.
 ════════════════════════════════════════════════════════════ */
+/**
+ * @function initWave
+ * @description Initializes a high-performance WebGL-based liquid aurora background.
+ * Uses a custom GLSL fragment shader with Simplex 3D Noise to render dynamic ambient waves.
+ * Performance is optimized by pausing the WebGL context via `IntersectionObserver` 
+ * when the canvas is scrolled out of the viewport.
+ */
 (function initWave() {
   const canvas = document.getElementById("waveCanvas");
   if (!canvas) return;
@@ -290,6 +313,12 @@ let lenis;
 /* ═══════════════════════════════════════════════════════════
    2. NAVBAR — Active link & background on scroll
 ════════════════════════════════════════════════════════════ */
+/**
+ * @function initNavbar
+ * @description Manages the primary navigation bar's state and scroll-spy functionality.
+ * Modifies the navbar's opacity on scroll and dynamically calculates the user's
+ * scroll depth to highlight the currently active section link.
+ */
 (function initNavbar() {
   const navbar = document.querySelector(".navbar");
   const navLinks = document.querySelectorAll(".nav-link");
@@ -300,7 +329,12 @@ let lenis;
     updateActiveLink();
   }
 
-  /** Highlight the nav link whose section is currently in view */
+  /**
+   * @function updateActiveLink
+   * @description Calculates bounding rects for all sections to spy on scroll position
+   * and update the corresponding active navigation link.
+   * @private
+   */
   function updateActiveLink() {
     let current = "";
 
@@ -324,12 +358,24 @@ let lenis;
 /* ═══════════════════════════════════════════════════════════
    3. HAMBURGER MENU
 ════════════════════════════════════════════════════════════ */
+/**
+ * @function initHamburger
+ * @description Manages mobile navigation drawer states and semantics.
+ * Implements focus-trapping considerations and ARIA accessibility attributes,
+ * closing gracefully on outside clicks and the Escape key.
+ */
 (function initHamburger() {
   const btn = document.querySelector(".hamburger");
   const menu = document.getElementById("mobile-menu");
   const links = document.querySelectorAll(".mobile-link");
   if (!btn || !menu) return;
 
+  /**
+   * @function toggle
+   * @description Modifies DOM and ARIA attributes to open/close the mobile menu.
+   * @param {boolean} open - Desired state of the mobile menu.
+   * @private
+   */
   function toggle(open) {
     btn.setAttribute("aria-expanded", String(open));
     if (open) {
@@ -365,6 +411,11 @@ let lenis;
    4. HERO ENTRY ANIMATIONS
    Small delay ensures fonts are rendered before elements appear.
 ════════════════════════════════════════════════════════════ */
+/**
+ * @function initHeroAnimations
+ * @description Handles the initial Entrance animations for the hero section typography.
+ * Implements a slight delay to ensure web fonts render before the animation triggers.
+ */
 (function initHeroAnimations() {
   const els = document.querySelectorAll(".animate-fade-up");
   setTimeout(() => {
@@ -376,6 +427,12 @@ let lenis;
    5. SCROLL REVEAL — IntersectionObserver
    Handles: .js-fade-left / .js-fade-right / .js-fade-up / .js-stagger
 ════════════════════════════════════════════════════════════ */
+/**
+ * @function initScrollReveal
+ * @description Initializes a high-performance IntersectionObserver to trigger 
+ * CSS-driven entrance animations (fade-in, slide-up, stagger) as elements 
+ * enter the viewport. Respects the user's OS-level accessibility preferences.
+ */
 (function initScrollReveal() {
   const selector = ".js-fade-left, .js-fade-right, .js-fade-up, .js-stagger";
 
@@ -413,13 +470,25 @@ let lenis;
 /* ═══════════════════════════════════════════════════════════
    6. CONTACT FORM — Validation + submit feedback
 ════════════════════════════════════════════════════════════ */
+/**
+ * @function initContactForm
+ * @description Binds the contact form submit event to handle client-side validation.
+ * Features inline, accessible error messages and provides non-blocking,
+ * animated feedback upon successful submission state.
+ */
 (function initContactForm() {
   const form = document.getElementById("contactForm");
   if (!form) return;
 
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  /** Attach an inline error message below an input */
+  /**
+   * @function showError
+   * @description Dynamically creates and injects accessible error DOM nodes below inputs.
+   * @param {HTMLElement} input - The input element that failed validation.
+   * @param {string} message - The contextual error message to display.
+   * @private
+   */
   function showError(input, message) {
     input.style.borderColor = "#EC4899";
 
@@ -480,11 +549,20 @@ let lenis;
 /* ═══════════════════════════════════════════════════════════
    7. BACK TO TOP BUTTON
 ════════════════════════════════════════════════════════════ */
+/**
+ * @function initBackToTop
+ * @description Manages the float action button for returning to the top of the document.
+ * Defers to the Lenis instance if available, otherwise falls back to native smooth scroll.
+ */
 (function initBackToTop() {
   const btn = document.getElementById("backToTop");
   if (!btn) return;
 
-  /* Show/hide based on scroll position */
+  /**
+   * @function toggleVisibility
+   * @description Toggles the FAB visibility threshold based on window scroll depth.
+   * @private
+   */
   function toggleVisibility() {
     btn.classList.toggle("visible", window.scrollY > window.innerHeight * 0.6);
   }
